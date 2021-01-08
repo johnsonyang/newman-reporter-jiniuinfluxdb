@@ -1,5 +1,5 @@
 {
-  "name": "newman-reporter-influxdb",
+  "name": "newman-reporter-jiniuinfluxdb",
   "version": "1.1.1",
   "description": "Newman Reporter for InfluxDB",
   "main": "index.js",

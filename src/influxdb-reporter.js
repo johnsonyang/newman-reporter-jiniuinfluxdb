@@ -29,13 +29,23 @@ class InfluxDBReporter {
   }
 
   start(error, args) {
-    this.context.server = this.reporterOptions.influxdbServer || this.reporterOptions.server;
-    this.context.port = this.reporterOptions.influxdbPort || this.reporterOptions.port;
-    this.context.name = this.reporterOptions.influxdbName || this.reporterOptions.name;
-    this.context.measurement = this.reporterOptions.influxdbMeasurement || this.reporterOptions.measurement;
-    this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
-    this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
-    this.context.mode = this.reporterOptions.influxdbMode || this.reporterOptions.mode;
+    // johnson note 此处直接hardcode,避免因为编程无法传入的问题
+    // this.context.server = this.reporterOptions.influxdbServer || this.reporterOptions.server;
+    // this.context.port = this.reporterOptions.influxdbPort || this.reporterOptions.port;
+    // this.context.name = this.reporterOptions.influxdbName || this.reporterOptions.name;
+    // this.context.measurement = this.reporterOptions.influxdbMeasurement || this.reporterOptions.measurement;
+    // this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
+    // this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
+    // this.context.mode = this.reporterOptions.influxdbMode || this.reporterOptions.mode;
+    // http://10.211.55.5:8086
+    this.context.server = '10.211.55.5';
+    this.context.port = '8086';
+    this.context.name = 'newman_reports';
+    this.context.measurement = 'api_results';
+    // note change
+    // this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
+    // this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
+    this.context.mode = 'http';
 
     if (!this.context.server) {
       throw new Error('[-] ERROR: InfluxDB Server Address is missing! Add --reporter-influxdb-server <server-address>.');
