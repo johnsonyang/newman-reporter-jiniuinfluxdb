@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vs4vijay/newman-reporter-influxdb.git"
+    "url": "git+https://github.com/johnsonyang/newman-reporter-jiniuinfluxdb.git"
   },
   "keywords": [
     "newman",
@@ -23,9 +23,9 @@
   "author": "Vijay Soni (vs4vijay@gmail.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vs4vijay/newman-reporter-influxdb/issues"
+    "url": "https://github.com/johnsonyang/newman-reporter-jiniuinfluxdb/issues"
   },
-  "homepage": "https://github.com/vs4vijay/newman-reporter-influxdb#readme",
+  "homepage": "https://github.com/johnsonyang/newman-reporter-jiniuinfluxdb#readme",
   "dependencies": {
     "axios": "^0.21.1"
   }
