@@ -10,6 +10,7 @@ class HttpService {
     this.context = context;
   }
 
+  // 构建db链接信息
   _buildInfluxDBUrl(path='write') {
     const url = `http://${this.context.server}:${this.context.port}/${path}`;
     const params = {
@@ -38,6 +39,7 @@ class HttpService {
     let connectionUrl = this._buildInfluxDBUrl();
 
     try {
+      // 发送数据记录给db
       await axios.post(connectionUrl, data);
     } catch (error) {
       console.log('[-] ERROR: while sending data to InfluxDB', error);

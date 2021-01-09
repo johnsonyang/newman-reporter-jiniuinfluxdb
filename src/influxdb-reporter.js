@@ -6,14 +6,23 @@ const HttpService = require('./http.service');
 const UdpService = require('./udp.service');
 
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //不含最大值，含最小值
+}
+
 class InfluxDBReporter {
-  
+
+
   constructor(newmanEmitter, reporterOptions, options) {
     this.newmanEmitter = newmanEmitter;
     this.reporterOptions = reporterOptions;
+    // options 测试用例的执行参数..这个参数里面有很多业务属性的元数据,尤其是 note collection
     this.options = options;
     this.context = {
-      id: `${new Date().getTime()}-${Math.random()}`,
+      // getTime() 返回从 1970 年 1 月 1 日至今的毫秒数。
+      id: `${new Date().getTime()}-${getRandomInt(0,1000)}`,
       currentItem: { index: 0 },
       assertions: {
         total: 0,
@@ -29,6 +38,7 @@ class InfluxDBReporter {
   }
 
   start(error, args) {
+
     // johnson note 此处直接hardcode,避免因为编程无法传入的问题
     // this.context.server = this.reporterOptions.influxdbServer || this.reporterOptions.server;
     // this.context.port = this.reporterOptions.influxdbPort || this.reporterOptions.port;
@@ -40,7 +50,9 @@ class InfluxDBReporter {
     // http://10.211.55.5:8086
     this.context.server = '10.211.55.5';
     this.context.port = '8086';
+    // 数据库名字
     this.context.name = 'newman_reports';
+    // 这个表名,也就是仅仅用来做后续数据上报的,所以,原则上是可以不作为这样大粒度的配置信息的
     this.context.measurement = 'api_results';
     // note change
     // this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
@@ -66,7 +78,7 @@ class InfluxDBReporter {
 
     const DataService = this.context.mode === 'udp' ? UdpService : HttpService;
     this.service = new DataService(this.context);
-    console.log(`Starting collection: ${this.options.collection.name} ${this.context.id}`);
+    console.log(`[+] 极牛-开始执行测试集: [${this.options.collection.name}#(${this.context.id})]`);
   }
 
   beforeItem(error, args) {
@@ -83,15 +95,17 @@ class InfluxDBReporter {
     };
   }
 
+  // 核心方法,入口方法
   request(error, args) {
     const { cursor, item, request } = args;
 
-    console.log(`[${this.context.currentItem.index}] Running ${item.name}`);
+    console.log(`[+] 极牛-执行测试集[${this.options.collection.name}#${this.context.currentItem.index}(${item.name})]`);
 
+    // 从数据源组装数据
     const data = {
       collection_name: this.options.collection.name, 
       request_name: item.name,
-      url: request.url.toString(),
+      rawurl: request.url.toString(),
       method: request.method,
       status: args.response.status,
       code: args.response.code,
@@ -104,6 +118,17 @@ class InfluxDBReporter {
       failed: [],
       skipped: []
     };
+
+    if (data.rawurl.length >0 ){
+      let index = data.rawurl.indexOf('?',0);
+      if (index !== -1){
+        // substring() 方法返回的子串包括 start 处的字符，但不包括 stop 处的字符。
+        data.url = data.rawurl.substring(0,index);
+      } else{
+        data.url = data.rawurl;
+      }
+
+    }
 
     this.context.currentItem.data = data;
     this.context.currentItem.name = item.name;
@@ -136,14 +161,24 @@ class InfluxDBReporter {
   }
 
   item(error, args) {
+    // 构建数据
     const binaryData = this.buildPayload(this.context.currentItem.data);
     // console.log('binaryData', binaryData);
 
+    // 发送数据给db
     this.service.sendData(binaryData);
+
+    //如果需要新增数据上报,可以考虑在此处添加
+    // // 构建数据
+    // const binaryData = this.buildPayload(this.context.currentItem.data);
+    // // console.log('binaryData', binaryData);
+    //
+    // // 发送数据给db
+    // this.service.sendData(binaryData);
   }
 
   done() {
-    console.log(`[+] Finished collection: ${this.options.collection.name} (${this.context.id})`);
+    console.log(`[+] 极牛-结束执行测试集: [${this.options.collection.name}#(${this.context.id})]`);
 
     // console.log('this.context', this.context);
     // console.log('this.options.collection', this.options.collection);
@@ -159,23 +194,30 @@ class InfluxDBReporter {
 
   /// Private method starts here
 
+  // 构建上报数据负载
   buildPayload(data) {
+    // 表名
     const measurementName = this.context.measurement;
 
     if(data.failed.length) {
+      // 分割符号使用的是','号
       data.failed = data.failed.join(',');
     } else {
       delete data.failed;
     }
 
     if(data.skipped.length) {
+      // 分割符号使用的是','号
       data.skipped = data.skipped.join(',');
     } else {
       delete data.skipped;
     }
 
     let binaryData = querystring.stringify(data, ',', '=', { encodeURIComponent: this._encodeURIComponent });
+    // 此处是真正需要发送给时序数据库记录的数据
     binaryData = `${measurementName},${binaryData} value=${data.response_time}\n`;
+    //TODO 还可以在记录其他的测量值
+
     return binaryData;
   }
 
