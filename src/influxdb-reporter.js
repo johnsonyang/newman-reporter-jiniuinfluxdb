@@ -51,30 +51,30 @@ class InfluxDBReporter {
 
 
     // note dev
-    this.context.server = '10.211.55.5';
-    this.context.port = '8086';
-    // 数据库名字
-    this.context.name = 'newman_reports';
-    // 这个表名,也就是仅仅用来做后续数据上报的,所以,原则上是可以不作为这样大粒度的配置信息的
-    this.context.measurement = 'api_results';
-    // note change
-    // this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
-    // this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
-    this.context.mode = 'http';
+    // this.context.server = '10.211.55.5';
+    // this.context.port = '8086';
+    // // 数据库名字
+    // this.context.name = 'newman_reports';
+    // // 这个表名,也就是仅仅用来做后续数据上报的,所以,原则上是可以不作为这样大粒度的配置信息的
+    // this.context.measurement = 'api_results';
+    // // note change
+    // // this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
+    // // this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
+    // this.context.mode = 'http';
 
 
     // note product
-    // this.context.server = '172.17.0.16';
-    // this.context.port = '8086';
-    // // 数据库名字 godeye_reports 需要实现建立
-    // this.context.name = 'godeye_reports';
-    // // 这个表名,也就是仅仅用来做后续数据上报的,所以,原则上是可以不作为这样大粒度的配置信息的
-    // // 无需实现建立
-    // this.context.measurement = 'api_results';
-    // // note change
-    // this.context.username = "godeye";
-    // this.context.password = "influxdb";
-    // this.context.mode = 'http';
+    this.context.server = '172.17.0.16';
+    this.context.port = '8086';
+    // 数据库名字 godeye_reports 需要实现建立
+    this.context.name = 'godeye_reports';
+    // 这个表名,也就是仅仅用来做后续数据上报的,所以,原则上是可以不作为这样大粒度的配置信息的
+    // 无需实现建立
+    this.context.measurement = 'api_results';
+    // note change
+    this.context.username = "godeye";
+    this.context.password = "influxdb";
+    this.context.mode = 'http';
 
     if (!this.context.server) {
       throw new Error('[-] ERROR: InfluxDB Server Address is missing! Add --reporter-influxdb-server <server-address>.');
@@ -124,7 +124,7 @@ class InfluxDBReporter {
       request_name: item.name,
       rawurl: request.url.toString(),
       method: request.method,
-      // TypeError: Cannot read property 'status' of undefined
+      // note 容错.. TypeError: Cannot read property 'status' of undefined
       status: args.response.status,
       code: args.response.code,
       response_time: args.response.responseTime,
