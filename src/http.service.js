@@ -31,7 +31,7 @@ class HttpService {
     try {
       const data = await axios.get(connectionUrl);
     } catch (error) {
-      console.log('[-] ERROR: not able to connect to InfluxDB', error);
+      console.log('[-] ERROR: HTTP无法建立连接到InfluxDB', error);
     }
   }
 
@@ -42,7 +42,7 @@ class HttpService {
       // 发送数据记录给db
       await axios.post(connectionUrl, data);
     } catch (error) {
-      console.log('[-] ERROR: while sending data to InfluxDB', error);
+      console.log('[-] ERROR: HTTP无法发送数据到InfluxDB', error);
     }
   }
 
