@@ -165,7 +165,7 @@ class InfluxDBReporter {
             this.context.currentItem.data = data;
             this.context.currentItem.name = item.name;
         } catch (e) {
-            console.exception(`[+] 极牛-执行测试集[${this.options.collection.name}#${this.context.currentItem.index}(${item.name})]`, e);
+            console.log(`[+] 极牛-执行测试集[${this.options.collection.name}#${this.context.currentItem.index}(${item.name})]发生异常`, e);
             // logger.error("出现异常:", e);
         }
     }
@@ -176,7 +176,7 @@ class InfluxDBReporter {
         // TODO: Johnson add
         const {cursor, item, request} = args;
         if (error) {
-            console.exception(`[+] 极牛-执行测试集[${this.options.collection.name}#${this.context.currentItem.index}(${item.name})]`, error);
+            console.log(`[+] 极牛-执行测试集[${this.options.collection.name}#${this.context.currentItem.index}(${item.name})]发生错误`, error);
         }
     }
 
