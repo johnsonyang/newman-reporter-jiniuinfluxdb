@@ -212,6 +212,7 @@ class InfluxDBReporter {
         // console.log('binaryData', binaryData);
 
         // 发送数据给db
+        // note 使用axios发送数据给influxdb，缺点是没有连接池
         this.service.sendData(binaryData);
 
         //如果需要新增数据上报,可以考虑在此处添加
