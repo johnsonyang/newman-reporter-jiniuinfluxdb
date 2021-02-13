@@ -21,8 +21,8 @@ const http = require('http')
 const agentConfig = {
   keepAlive: true,
   keepAliveMsecs: 12000,
-  maxSockets: 128,
-  maxTotalSockets:500,
+  maxSockets: 300,
+  maxTotalSockets:600,
   maxFreeSockets:300,
   timeout:1500
 };
