@@ -1,7 +1,7 @@
 # newman-reporter-influxdb
 
 InfluxDB reporter for [Newman](https://github.com/postmanlabs/newman) that sends the test results information to InfluxDB which can be used from Grafana to build dashboard.
-
+# 直接上传到GitHub就可以了，引入方通过npm update即可使用
 <a href="https://www.npmjs.com/package/newman-reporter-influxdb">
   <img alt="npm version" src="https://img.shields.io/npm/v/newman-reporter-influxdb.svg">
   <img alt="npm downloads" src="https://img.shields.io/npm/dm/newman-reporter-influxdb.svg">
